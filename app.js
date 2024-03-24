@@ -1,18 +1,21 @@
-function compress() {
-    const input = document.getElementById('imageInput');
-    const file = input.files[0];
-    const formData = new FormData();
-    formData.append('image', file);
+document.querySelector('form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var formData = new FormData();
+    formData.append('image', document.querySelector('input[type="file"]').files[0]);
 
-    fetch('YOUR_CLOUD_FUNCTION_URL', {
+    fetch('https://us-central1-your-project.cloudfunctions.net/compress_image', {
         method: 'POST',
-        body: formData,
+        body: formData
     })
-    .then(response => response.text())
-    .then(data => {
-        const imgElement = document.getElementById('compressedImage');
-        imgElement.src = 'data:image/jpeg;base64,' + data;
-        imgElement.style.display = 'block';
+    .then(function(response) {
+        return response.text();
     })
-    .catch(error => console.error('Error:', error));
-}
+    .then(function(imageBase64) {
+        var img = new Image();
+        img.src = 'data:image/jpeg;base64,' + imageBase64;
+        document.body.appendChild(img);
+    })
+    .catch(function(error) {
+        console.error('Error:', error);
+    });
+});

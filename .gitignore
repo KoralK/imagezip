@@ -3,4 +3,5 @@ compressed_image.txt
 cors.json
 *.webp
 *.jpg
-
+/gcloudignore/
+.gcloudignore
