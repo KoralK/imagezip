@@ -5,3 +5,6 @@ cors.json
 *.jpg
 /gcloudignore/
 .gcloudignore
+app_1.js
+index_1.html
+

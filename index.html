@@ -9,7 +9,13 @@
         <input type="file" id="imageInput">
         <button type="submit">Compress Image</button>
     </form>
+    <div id="imageInfo">
+        <p>Original Name: <span id="originalName"></span></p>
+        <p>Original Size: <span id="originalSize"></span> KB</p>
+        <p>Compressed Size: <span id="compressedSize"></span> KB</p>
+    </div>
     <img id="compressedImage" src="" alt="Compressed Image" style="display:none;"/>
+    <a id="downloadLink" style="display:none;" download="compressed_image.jpg">Download Compressed Image</a>
     <script src="app.js"></script>
 </body>
 </html>
