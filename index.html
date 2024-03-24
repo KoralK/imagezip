@@ -5,9 +5,11 @@
 </head>
 <body>
     <h1>Picture zipper</h1>
-    <input type="file" id="imageInput">
-    <button onclick="compress()">compressedImage</button>
-    <img id="compressedImage" src="" alt="compressedImage" style="display:none;"/>
+    <form id="imageForm">
+        <input type="file" id="imageInput">
+        <button type="submit">Compress Image</button>
+    </form>
+    <img id="compressedImage" src="" alt="Compressed Image" style="display:none;"/>
     <script src="app.js"></script>
 </body>
 </html>
