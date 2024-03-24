@@ -3,12 +3,12 @@ document.getElementById('imageForm').addEventListener('submit', function(event) 
     var imageInput = document.getElementById('imageInput');
     var file = imageInput.files[0];
     
-    var formData = new FormData();
-    formData.append('image', file);
-
     // Display original file info
     document.getElementById('originalName').textContent = file.name;
     document.getElementById('originalSize').textContent = (file.size / 1024).toFixed(2); // Size in KB
+
+    var formData = new FormData();
+    formData.append('image', file);
 
     fetch('https://us-central1-vocal-park-418014.cloudfunctions.net/compress_image', {
         method: 'POST',
@@ -18,18 +18,40 @@ document.getElementById('imageForm').addEventListener('submit', function(event) 
         return response.text();
     })
     .then(function(imageBase64) {
-        var compressedImageElement = document.getElementById('compressedImage');
-        compressedImageElement.src = 'data:image/jpeg;base64,' + imageBase64;
-        compressedImageElement.style.display = 'block';
+        // Ensure the base64 string is not empty
+        if (imageBase64) {
+            var compressedImageElement = document.getElementById('compressedImage');
+            compressedImageElement.src = 'data:image/jpeg;base64,' + imageBase64;
+            compressedImageElement.style.display = 'block';
 
-        // Calculate compressed size
-        var compressedSize = Math.round((imageBase64.length * 3) / 4 / 1024); // Base64 to binary: size * 3/4; KB conversion: /1024
-        document.getElementById('compressedSize').textContent = compressedSize;
+            // Calculate compressed size in KB (approximation)
+            var compressedSize = Math.round((imageBase64.length * 3) / 4 / 1024);
+            document.getElementById('compressedSize').textContent = compressedSize;
 
-        // Update download link
-        var downloadLink = document.getElementById('downloadLink');
-        downloadLink.href = compressedImageElement.src;
-        downloadLink.style.display = 'inline';
+            // Create a Blob from the base64 string
+            var byteCharacters = atob(imageBase64);
+            var byteArrays = [];
+
+            for (var offset = 0; offset < byteCharacters.length; offset += 512) {
+                var slice = byteCharacters.slice(offset, offset + 512);
+                var byteNumbers = new Array(slice.length);
+                for (var i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                var byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            
+            var blob = new Blob(byteArrays, {type: 'image/jpeg'});
+
+            // Update download link for the blob
+            var downloadLink = document.getElementById('downloadLink');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.style.display = 'inline';
+            downloadLink.textContent = 'Download Compressed Image'; // Add text content to the link
+        } else {
+            console.error('No image data received.');
+        }
     })
     .catch(function(error) {
         console.error('Error:', error);
