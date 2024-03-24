@@ -3,9 +3,10 @@ document.querySelector('form').addEventListener('submit', function(event) {
     var formData = new FormData();
     formData.append('image', document.querySelector('input[type="file"]').files[0]);
 
-    fetch('https://us-central1-your-project.cloudfunctions.net/compress_image', {
+    fetch('https://us-central1-your-project.cloudfunctions.net/compress_imagehttps://us-central1-vocal-park-418014.cloudfunctions.net/compress_image', {
         method: 'POST',
         body: formData
+        
     })
     .then(function(response) {
         return response.text();
